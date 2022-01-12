@@ -123,18 +123,26 @@ for text in statements:
     titles.append(wikidatast)
     print(titles)
 
-#Latent Dirichlet Allocation with Term Frequency and Gibbs Sampling
+# Latent Dirichlet Allocation with Term Frequency and collapsed Gibbs sampling
 vec = CountVectorizer()
 X1 = vec.fit_transform(titles)
 df = pd.DataFrame(X1.toarray(), columns=vec.get_feature_names())
+# Compressed Sparse Row matrix
 X = scipy.sparse.csr_matrix(df.values)
+# Array mapping from feature integer indices to feature name.
 vocab = vec.get_feature_names()
 print(X)
-X.shape
-X.sum()
+# Shape of the matrix e.g. 2x3
+print(X.shape)
+# Sum of the matrix elements
+print(X.sum())
+# Instantiate a model with our chosen parameters
 model = lda.LDA(n_topics=20, n_iter=1500, random_state=1)
+# Fit the model with X ie. calculate the topic distributions using LDA
 model.fit(X)  # model.fit_transform(X) is also available
+# This method is not documented. What does it do?
 topic_word = model.topic_word_  # model.components_ also works
+# Extract 8 topics at random?
 n_top_words = 8
 for i, topic_dist in enumerate(topic_word):
   with open("results_LN.txt", "a") as f1:
